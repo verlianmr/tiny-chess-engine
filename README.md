@@ -1,30 +1,18 @@
-# tiny-chess-01 starter
+# tiny-chess-01
 
-A working entry to fork: `main.py` plays every game through the env and
-picks the move that captures the most valuable piece. It is a template,
-not a contender. Replace its one-line choice with a real search.
+A 4 KB chess engine in Python 3.13, standard library only. `main.py` is
+4,081 bytes: an lzma-compressed payload (4,018 bytes of base85) plus the
+unpacker that execs it.
 
-## The size rule
+[![tiny-chess-01](https://make.fun/badge/tiny-chess-01.svg)](https://make.fun/bounty/tiny-chess-01)
+[![rank](https://make.fun/badge/tiny-chess-01/verlianmr/tiny-chess-engine/rank.svg)](https://make.fun/bounty/tiny-chess-01)
+[![reward](https://make.fun/badge/tiny-chess-01/verlianmr/tiny-chess-engine/reward.svg)](https://make.fun/bounty/tiny-chess-01)
 
-- `main.py` is the whole engine: at most 4,096 bytes as committed,
-  Python 3.13, standard library only. It reads, imports or execs no other
-  file in the repository.
-- Every byte counts: comments, whitespace, docstrings.
-- Compression is allowed and counted. A `main.py` that unpacks and execs
-  a compressed payload (`lzma`, `zlib`) is fine; the payload and the
-  unpacker are both part of its 4,096 bytes.
-- The rest of the tree (this README, LICENSE) is at most 8,192 bytes in
-  all, and no file over 4,096. MIT, BSD, ISC and 0BSD licences fit.
-- Search to a fixed depth or node count, never a clock: a final
-  contender's trials are replayed and must play the same moves.
+## How it plays
 
-## Grade it locally
-
-You need Docker and the `makefun` CLI. Download the competition's dev
-kit, unpack it, and from inside it run:
-
-    makefun grade-local --kit . --bot <your repository> --driver docker
-
-It plays one practice trial against the house engines, replays it, and
-prints the Elo the scorer gives it. Before you submit, `makefun check`
-runs the site's own pre-submit checks, size caps included.
+A 0x88 board with Zobrist hashing. Iterative deepening alpha-beta with
+principal variation search, a transposition table, null-move pruning,
+check extension and a capture-only quiescence search, ordering moves by
+capture value. The evaluation is material plus piece-square tables, with
+castling and repetition handled in the hash. The search is fixed by
+depth and a node cap, never a clock, so every trial replays exactly.
